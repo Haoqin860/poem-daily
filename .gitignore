@@ -1,0 +1,16 @@
+# Logs
+*.log
+generate_log.txt
+
+# Environment
+.env
+
+# macOS
+.DS_Store
+
+# Data test files
+data/*_test.json
+
+# Python
+__pycache__/
+*.pyc
