@@ -3,388 +3,1288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>每日诗词 | 唐诗宋词精选</title>
+    <title>每日诗词 | Poem Daily</title>
+    <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ink-black: #1a1a1a;
-            --ink-gray: #4a4a4a;
-            --paper-cream: #f5f0e8;
-            --paper-aged: #e8e0d0;
-            --vermilion: #c41e3a;
-            --gold: #c9a227;
-            --gold-light: #d4af37;
-            --jade: #2d5a4a;
-            --mist: rgba(245, 240, 232, 0.95);
+            color-scheme: light;
+            --ink: #191713;
+            --ink-soft: #3e3930;
+            --muted: #746b5e;
+            --paper: #f7f1e6;
+            --paper-deep: #efe2cd;
+            --paper-dim: #dccab0;
+            --field: rgba(255, 251, 242, 0.78);
+            --line: rgba(56, 48, 38, 0.14);
+            --line-strong: rgba(56, 48, 38, 0.24);
+            --lacquer: #a7352a;
+            --lacquer-dark: #79251f;
+            --pine: #49685a;
+            --pine-dark: #243d35;
+            --gold: #b9954a;
+            --river: #597284;
+            --shadow-soft: 0 22px 70px rgba(31, 24, 14, 0.13);
+            --shadow-tight: 0 10px 30px rgba(31, 24, 14, 0.12);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 14px;
+            --space-1: 0.5rem;
+            --space-2: 1rem;
+            --space-3: 1.5rem;
+            --space-4: 2rem;
+            --space-5: 3rem;
+            --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background: var(--paper);
+        }
 
         body {
-            font-family: 'Noto Serif SC', serif;
-            background: var(--ink-black);
-            color: var(--ink-black);
             min-height: 100vh;
+            margin: 0;
+            font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(167, 53, 42, 0.09), transparent 24rem),
+                radial-gradient(circle at 84% 8%, rgba(73, 104, 90, 0.16), transparent 28rem),
+                linear-gradient(135deg, #f3e8d7 0%, #fbf6ed 42%, #e9dac3 100%);
             overflow-x: hidden;
+            text-wrap: pretty;
         }
 
-        .page-wrapper { min-height: 100vh; position: relative; }
-
-        .ink-texture {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            z-index: 1000;
-        }
-
-        .mountain-bg {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60%;
-            background: linear-gradient(to top, var(--ink-black) 0%, transparent 100%),
-                radial-gradient(ellipse at 20% 80%, var(--jade) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 70%, #1e3a3a 0%, transparent 50%);
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.18;
+            background-image:
+                linear-gradient(rgba(25, 23, 19, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(25, 23, 19, 0.026) 1px, transparent 1px);
+            background-size: 38px 38px;
+            mask-image: linear-gradient(to bottom, black, transparent 82%);
             z-index: 0;
         }
 
-        .mountain-silhouette { position: fixed; bottom: 0; left: 0; width: 100%; height: 45%; z-index: 1; }
-        .mountain-silhouette svg { width: 100%; height: 100%; }
-
-        .main-container {
-            position: relative; z-index: 10; min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 3rem 2rem;
+        button,
+        input {
+            font: inherit;
         }
 
-        .header { text-align: center; margin-bottom: 2rem; animation: fadeInDown 1s ease-out; }
-
-        .header h1 {
-            font-family: 'Ma Shan Zheng', cursive;
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
-            color: var(--paper-cream); letter-spacing: 0.3em; margin-bottom: 0.5rem;
-            text-shadow: 0 0 40px rgba(201, 162, 39, 0.3);
+        button {
+            min-height: 44px;
         }
 
-        .header .subtitle { font-size: 0.9rem; color: var(--gold); letter-spacing: 0.5em; text-transform: uppercase; }
-
-        .date-section { text-align: center; margin-bottom: 1.5rem; animation: fadeIn 1s ease-out 0.2s both; }
-
-        .season-badge {
-            display: inline-block; background: linear-gradient(135deg, var(--jade), #3d6b5a);
-            color: var(--paper-cream); padding: 0.4rem 1.2rem; font-size: 0.8rem;
-            letter-spacing: 0.3em; margin-bottom: 0.8rem; border-radius: 2px;
-        }
-
-        .date-display { margin-top: 0.5rem; }
-        .date-display .solar-date { font-family: 'Ma Shan Zheng', cursive; font-size: 1.4rem; color: var(--paper-aged); letter-spacing: 0.2em; }
-        .date-display .lunar-date { font-size: 0.85rem; color: var(--gold); letter-spacing: 0.15em; margin-top: 0.3rem; }
-
-        .poem-card {
-            background: linear-gradient(135deg, var(--mist) 0%, rgba(245, 240, 232, 0.95) 100%);
-            border-radius: 4px; padding: 2.5rem 3rem; max-width: 680px; width: 100%;
+        .app-shell {
             position: relative;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            animation: fadeInUp 1s ease-out 0.4s both;
-            border: 1px solid rgba(201, 162, 39, 0.2);
+            z-index: 1;
+            width: min(1440px, calc(100% - 32px));
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 28px 0 36px;
         }
 
-        .poem-card::before {
-            content: ''; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
-            border: 1px solid rgba(201, 162, 39, 0.15); pointer-events: none;
+        .topbar {
+            display: grid;
+            grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
+            align-items: center;
+            gap: var(--space-3);
+            padding: 10px 0 26px;
+        }
+
+        .brand-mark {
+            display: inline-grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            gap: 14px;
+            width: fit-content;
+        }
+
+        .seal {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            aspect-ratio: 1;
+            background: var(--lacquer);
+            color: var(--paper);
+            border: 1px solid rgba(121, 37, 31, 0.7);
+            border-radius: var(--radius-sm);
+            box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.08), var(--shadow-tight);
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: 1.65rem;
+            line-height: 1;
+        }
+
+        .brand-name {
+            margin: 0;
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: clamp(2.1rem, 5vw, 4.1rem);
+            font-weight: 400;
+            letter-spacing: 0.14em;
+            line-height: 0.95;
+        }
+
+        .brand-caption {
+            margin: 0.25rem 0 0;
+            color: var(--muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+        }
+
+        .date-ribbon {
+            justify-self: center;
+            min-width: min(100%, 330px);
+            padding: 12px 22px;
+            border: 1px solid var(--line-strong);
+            border-radius: 999px;
+            background: rgba(255, 251, 242, 0.55);
+            color: var(--ink-soft);
+            text-align: center;
+            box-shadow: 0 12px 34px rgba(55, 42, 25, 0.08);
+            backdrop-filter: blur(14px);
+        }
+
+        .date-ribbon strong {
+            display: block;
+            color: var(--pine-dark);
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+        }
+
+        .date-ribbon span {
+            display: block;
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 0.76rem;
+            letter-spacing: 0.16em;
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(250px, 320px) minmax(0, 1fr) minmax(250px, 320px);
+            gap: clamp(18px, 2.4vw, 32px);
+            align-items: start;
+        }
+
+        .rail {
+            display: grid;
+            gap: 16px;
+            position: sticky;
+            top: 24px;
+        }
+
+        .panel,
+        .poem-sheet,
+        .modal-panel {
+            border: 1px solid var(--line);
+            background: var(--field);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px);
+        }
+
+        .panel {
+            border-radius: var(--radius-lg);
+            padding: 18px;
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .panel-title {
+            margin: 0;
+            color: var(--ink);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+
+        .panel-kicker {
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            min-height: 48px;
+            padding: 0 15px;
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius-md);
+            outline: none;
+            background: rgba(255, 251, 242, 0.78);
+            color: var(--ink);
+            transition: border-color 180ms var(--ease), box-shadow 180ms var(--ease), background 180ms var(--ease);
+        }
+
+        .search-input::placeholder {
+            color: rgba(116, 107, 94, 0.72);
+        }
+
+        .search-input:focus {
+            border-color: rgba(167, 53, 42, 0.56);
+            background: rgba(255, 251, 242, 0.96);
+            box-shadow: 0 0 0 4px rgba(167, 53, 42, 0.1);
+        }
+
+        .segmented {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 6px;
+            padding: 6px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: rgba(25, 23, 19, 0.04);
+        }
+
+        .filter-btn {
+            min-height: 40px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: background 160ms var(--ease), color 160ms var(--ease), box-shadow 160ms var(--ease);
+        }
+
+        .filter-btn:hover,
+        .filter-btn:focus-visible {
+            color: var(--ink);
+            background: rgba(255, 251, 242, 0.72);
+        }
+
+        .filter-btn.active {
+            color: var(--paper);
+            background: var(--pine);
+            box-shadow: 0 8px 20px rgba(73, 104, 90, 0.22);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .stat-tile {
+            min-height: 78px;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: rgba(255, 251, 242, 0.54);
+        }
+
+        .stat-value {
+            display: block;
+            color: var(--lacquer-dark);
+            font-size: clamp(1.25rem, 3vw, 1.8rem);
+            font-weight: 700;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-label {
+            display: block;
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 0.13em;
+        }
+
+        .search-results {
+            display: grid;
+            gap: 8px;
+            max-height: 360px;
+            margin-top: 14px;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .search-result-item,
+        .favorite-tag {
+            width: 100%;
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            background: rgba(255, 251, 242, 0.45);
+            color: inherit;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 160ms var(--ease), border-color 160ms var(--ease), background 160ms var(--ease);
+        }
+
+        .search-result-item {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            padding: 11px 12px;
+        }
+
+        .search-result-item:hover,
+        .search-result-item:focus-visible,
+        .favorite-tag:hover,
+        .favorite-tag:focus-visible {
+            transform: translateY(-1px);
+            border-color: rgba(185, 149, 74, 0.45);
+            background: rgba(255, 251, 242, 0.82);
+        }
+
+        .result-title,
+        .favorite-title {
+            display: block;
+            overflow: hidden;
+            color: var(--ink);
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .result-meta,
+        .favorite-meta {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.76rem;
+            letter-spacing: 0.08em;
+        }
+
+        .result-type {
+            color: var(--pine);
+            font-size: 0.76rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .favorites-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .favorite-tag {
+            padding: 12px;
+        }
+
+        .empty-state,
+        .loading-note {
+            margin: 0;
+            padding: 14px 10px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .stage {
+            min-width: 0;
+        }
+
+        .poem-sheet {
+            position: relative;
+            overflow: hidden;
+            min-height: 710px;
+            padding: clamp(28px, 5vw, 64px);
+            border-radius: 18px;
+            background:
+                linear-gradient(90deg, rgba(185, 149, 74, 0.12) 1px, transparent 1px) 0 0 / 72px 100%,
+                linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(247, 241, 230, 0.92)),
+                var(--paper);
+        }
+
+        .poem-sheet::before,
+        .poem-sheet::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .poem-sheet::before {
+            inset: 18px;
+            border: 1px solid rgba(185, 149, 74, 0.28);
+            border-radius: 12px;
+        }
+
+        .poem-sheet::after {
+            right: -84px;
+            bottom: -126px;
+            width: 360px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(73, 104, 90, 0.22), transparent 66%);
         }
 
         .poem-type-badge {
-            position: absolute; top: -1px; right: 35px;
-            background: var(--vermilion); color: var(--paper-cream);
-            font-size: 0.7rem; padding: 0.35rem 0.9rem; letter-spacing: 0.2em;
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: var(--radius-sm);
+            background: var(--lacquer);
+            color: var(--paper);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
         }
 
-        .poem-header { text-align: center; margin-bottom: 1.8rem; padding-bottom: 1.2rem; border-bottom: 1px solid rgba(201, 162, 39, 0.3); }
+        .poem-header {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: var(--space-3);
+            align-items: end;
+            margin-top: 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line-strong);
+        }
 
-        .poem-title { font-family: 'Ma Shan Zheng', cursive; font-size: 2rem; color: var(--ink-black); letter-spacing: 0.15em; margin-bottom: 0.4rem; }
-        .poem-author { color: var(--ink-gray); font-size: 0.85rem; letter-spacing: 0.3em; }
-        .poem-author span { color: var(--gold); }
+        .poem-title {
+            margin: 0;
+            color: var(--ink);
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: clamp(2.4rem, 7vw, 5.7rem);
+            font-weight: 400;
+            letter-spacing: 0.11em;
+            line-height: 1.04;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
 
-        .poem-content { line-height: 2.3; text-align: center; }
-        .poem-line { display: inline; font-size: 1.35rem; color: var(--ink-black); letter-spacing: 0.08em; }
-        .poem-separator { display: block; height: 1.2rem; }
-        .poem-paragraph { display: block; margin-bottom: 0.3rem; }
+        .poem-title.poem-title-compact {
+            font-size: clamp(1.9rem, 3.5vw, 3.2rem);
+            letter-spacing: 0.035em;
+            line-height: 1.16;
+        }
+
+        .poem-title.poem-title-dense {
+            font-size: clamp(1.65rem, 2.8vw, 2.65rem);
+            letter-spacing: 0.015em;
+            line-height: 1.22;
+        }
+
+        .poem-author {
+            margin: 0;
+            color: var(--ink-soft);
+            font-size: 0.95rem;
+            letter-spacing: 0.2em;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .poem-author span:first-child {
+            color: var(--lacquer-dark);
+            font-weight: 700;
+        }
+
+        .poem-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 12px;
+            margin: clamp(30px, 5vw, 54px) 0;
+        }
+
+        .poem-paragraph {
+            margin: 0;
+            color: var(--ink);
+            font-size: clamp(1.26rem, 2.15vw, 2.15rem);
+            line-height: 2;
+            letter-spacing: 0.08em;
+            text-align: center;
+        }
+
+        .poem-line {
+            display: inline;
+        }
 
         .poem-brief {
-            margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid rgba(201, 162, 39, 0.3);
-            font-size: 0.88rem; color: var(--ink-gray); line-height: 1.8; text-align: justify; text-indent: 2em;
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            padding: 20px 0 0;
+            border-top: 1px solid var(--line);
+            color: var(--ink-soft);
+            font-size: 0.98rem;
+            line-height: 2;
+            text-align: justify;
+            text-indent: 2em;
         }
 
-        .action-buttons { display: flex; gap: 1rem; margin-top: 1.8rem; justify-content: center; flex-wrap: wrap; }
+        .sheet-actions {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 30px;
+        }
 
         .btn {
-            background: transparent; border: 1px solid var(--gold); color: var(--gold);
-            padding: 0.6rem 1.5rem; font-family: 'Noto Serif SC', serif;
-            font-size: 0.8rem; letter-spacing: 0.2em; cursor: pointer;
-            transition: all 0.3s ease; position: relative; overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid rgba(25, 23, 19, 0.18);
+            border-radius: var(--radius-md);
+            background: rgba(255, 251, 242, 0.6);
+            color: var(--ink);
+            cursor: pointer;
+            font-size: 0.86rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            transition: transform 160ms var(--ease), background 160ms var(--ease), color 160ms var(--ease), border-color 160ms var(--ease), box-shadow 160ms var(--ease);
         }
 
-        .btn::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: var(--gold); transition: left 0.3s ease; z-index: -1;
+        .btn:hover,
+        .btn:focus-visible {
+            transform: translateY(-1px);
+            border-color: rgba(167, 53, 42, 0.38);
+            background: rgba(255, 251, 242, 0.9);
+            box-shadow: 0 10px 24px rgba(31, 24, 14, 0.1);
         }
 
-        .btn:hover { color: var(--ink-black); }
-        .btn:hover::before { left: 0; }
-
-        .btn-secondary { border-color: var(--paper-aged); color: var(--paper-aged); }
-        .btn-secondary::before { background: var(--paper-aged); }
-
-        .btn-interpret { border-color: var(--vermilion); color: var(--vermilion); }
-        .btn-interpret::before { background: var(--vermilion); }
-
-        .favorites-section, .search-section { max-width: 680px; width: 100%; margin-top: 1.5rem; animation: fadeInUp 1s ease-out 0.6s both; }
-
-        .section-title { font-family: 'Ma Shan Zheng', cursive; font-size: 1.2rem; color: var(--paper-aged); letter-spacing: 0.2em; text-align: center; margin-bottom: 0.8rem; }
-
-        .favorites-list, .category-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-
-        .favorite-tag, .filter-btn {
-            background: rgba(245, 240, 232, 0.08); border: 1px solid rgba(201, 162, 39, 0.3);
-            color: var(--paper-aged); padding: 0.35rem 0.9rem;
-            font-size: 0.75rem; letter-spacing: 0.1em; cursor: pointer;
-            transition: all 0.3s; border-radius: 2px;
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
         }
 
-        .favorite-tag:hover, .filter-btn:hover:not(.active) { background: rgba(201, 162, 39, 0.2); border-color: var(--gold); }
-        .filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ink-black); }
+        .btn-primary {
+            border-color: var(--lacquer);
+            background: var(--lacquer);
+            color: var(--paper);
+        }
 
-        .empty-favorites { color: rgba(245, 240, 232, 0.4); font-size: 0.8rem; letter-spacing: 0.1em; }
+        .btn-primary:hover,
+        .btn-primary:focus-visible {
+            border-color: var(--lacquer-dark);
+            background: var(--lacquer-dark);
+            color: var(--paper);
+        }
 
-        .footer { margin-top: auto; padding-top: 2.5rem; text-align: center; animation: fadeIn 1s ease-out 0.8s both; }
-        .footer p { font-size: 0.7rem; color: rgba(245, 240, 232, 0.4); letter-spacing: 0.2em; }
+        .btn-pine {
+            border-color: var(--pine);
+            background: var(--pine);
+            color: var(--paper);
+        }
+
+        .btn-pine:hover,
+        .btn-pine:focus-visible {
+            border-color: var(--pine-dark);
+            background: var(--pine-dark);
+            color: var(--paper);
+        }
+
+        .reading-meta {
+            display: grid;
+            gap: 11px;
+            margin: 0;
+        }
+
+        .meta-row {
+            display: grid;
+            grid-template-columns: 74px minmax(0, 1fr);
+            gap: 12px;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .meta-row:last-child {
+            border-bottom: 0;
+        }
+
+        .meta-label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.16em;
+        }
+
+        .meta-value {
+            color: var(--ink);
+            font-size: 0.86rem;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .season-card {
+            min-height: 172px;
+            display: grid;
+            align-content: space-between;
+            color: var(--paper);
+            background:
+                linear-gradient(135deg, rgba(36, 61, 53, 0.94), rgba(73, 104, 90, 0.78)),
+                var(--pine);
+        }
+
+        .season-name {
+            margin: 0;
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: 3.4rem;
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: 0.12em;
+        }
+
+        .season-desc {
+            margin: 8px 0 0;
+            color: rgba(247, 241, 230, 0.78);
+            letter-spacing: 0.18em;
+        }
+
+        .season-foot {
+            color: rgba(247, 241, 230, 0.72);
+            font-size: 0.78rem;
+            line-height: 1.8;
+        }
 
         .toast {
-            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: var(--paper-cream); color: var(--ink-black);
-            padding: 0.9rem 1.8rem; border-radius: 4px; font-size: 0.85rem;
-            letter-spacing: 0.1em; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            opacity: 0; transition: all 0.4s ease; z-index: 1000;
-        }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); z-index: 2000;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: all 0.4s ease; padding: 2rem;
-        }
-        .modal-overlay.show { opacity: 1; visibility: visible; }
-
-        .modal-content {
-            background: linear-gradient(135deg, var(--paper-cream) 0%, var(--paper-aged) 100%);
-            max-width: 800px; width: 100%; max-height: 85vh; overflow-y: auto;
-            border-radius: 4px; position: relative;
-            transform: translateY(30px); transition: transform 0.4s ease;
-        }
-        .modal-overlay.show .modal-content { transform: translateY(0); }
-
-        .modal-content::before {
-            content: ''; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
-            border: 1px solid rgba(201, 162, 39, 0.2); pointer-events: none;
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 3000;
+            max-width: min(420px, calc(100% - 32px));
+            padding: 13px 18px;
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius-md);
+            background: rgba(25, 23, 19, 0.92);
+            color: var(--paper);
+            box-shadow: 0 20px 50px rgba(25, 23, 19, 0.24);
+            opacity: 0;
+            transform: translate(-50%, 18px);
+            transition: opacity 220ms var(--ease), transform 220ms var(--ease);
+            pointer-events: none;
         }
 
-        .modal-header { padding: 2rem 2.5rem 1.5rem; border-bottom: 1px solid rgba(201, 162, 39, 0.3); position: relative; }
-
-        .modal-close {
-            position: absolute; top: 1.2rem; right: 1.5rem; background: none; border: none;
-            font-size: 1.5rem; color: var(--ink-gray); cursor: pointer; transition: color 0.3s; line-height: 1;
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
         }
-        .modal-close:hover { color: var(--vermilion); }
-
-        .modal-title { font-family: 'Ma Shan Zheng', cursive; font-size: 1.8rem; color: var(--ink-black); letter-spacing: 0.1em; margin-bottom: 0.3rem; }
-        .modal-author { color: var(--ink-gray); font-size: 0.85rem; letter-spacing: 0.2em; }
-        .modal-author span { color: var(--gold); }
-
-        .modal-body { padding: 1.5rem 2.5rem 2rem; }
-
-        .interpret-section { margin-bottom: 1.8rem; }
-        .interpret-section:last-child { margin-bottom: 0; }
-
-        .section-label {
-            display: inline-block; background: var(--gold); color: var(--paper-cream);
-            font-size: 0.7rem; padding: 0.25rem 0.8rem; letter-spacing: 0.2em; margin-bottom: 0.8rem;
-        }
-
-        .interpret-text { font-size: 0.9rem; color: var(--ink-black); line-height: 2; text-align: justify; }
-        .interpret-text.indent { text-indent: 2em; }
-
-        .highlight-poem { background: rgba(201, 162, 39, 0.08); padding: 1.5rem; margin: 1rem 0; text-align: center; border-left: 3px solid var(--gold); }
-        .highlight-poem .line { font-size: 1.15rem; color: var(--ink-black); letter-spacing: 0.1em; line-height: 2; display: block; }
-
-        .poem-scroll { max-height: 200px; overflow-y: auto; padding-right: 0.5rem; }
-        .poem-scroll::-webkit-scrollbar { width: 4px; }
-        .poem-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
-
-        .search-box { display: flex; gap: 0.5rem; }
-        .search-input {
-            flex: 1; background: rgba(245, 240, 232, 0.08); border: 1px solid rgba(201, 162, 39, 0.3);
-            color: var(--paper-aged); padding: 0.6rem 1rem;
-            font-family: 'Noto Serif SC', serif; font-size: 0.85rem; letter-spacing: 0.1em; outline: none; transition: border-color 0.3s;
-        }
-        .search-input::placeholder { color: rgba(245, 240, 232, 0.4); }
-        .search-input:focus { border-color: var(--gold); }
-
-        .search-results { margin-top: 1rem; max-height: 300px; overflow-y: auto; }
-        .search-result-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0.6rem 0.8rem; border-bottom: 1px solid rgba(201, 162, 39, 0.1); cursor: pointer; transition: background 0.3s;
-        }
-        .search-result-item:hover { background: rgba(201, 162, 39, 0.1); }
-        .search-result-item .title { font-size: 0.9rem; color: var(--ink-black); letter-spacing: 0.05em; }
-        .search-result-item .author { font-size: 0.75rem; color: var(--ink-gray); letter-spacing: 0.1em; }
-
-        .poem-stats { font-size: 0.7rem; color: rgba(245, 240, 232, 0.4); letter-spacing: 0.1em; margin-top: 0.5rem; text-align: center; }
 
         .loading-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--ink-black); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999;
-            transition: opacity 0.8s ease; padding: 2rem;
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            display: grid;
+            place-items: center;
+            padding: 32px;
+            background:
+                radial-gradient(circle at 50% 42%, rgba(185, 149, 74, 0.16), transparent 18rem),
+                var(--ink);
+            color: var(--paper);
+            transition: opacity 360ms var(--ease), visibility 360ms var(--ease);
         }
-        .loading-screen.hidden { opacity: 0; pointer-events: none; }
-        .loading-text { font-family: 'Ma Shan Zheng', cursive; font-size: 2.5rem; color: var(--paper-cream); letter-spacing: 0.5em; animation: pulse 1.5s ease-in-out infinite; }
-        .loading-hint { margin-top: 1rem; font-size: 0.8rem; color: var(--gold); letter-spacing: 0.2em; text-align: center; }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-card {
+            width: min(420px, 100%);
+            text-align: center;
+        }
+
+        .loading-glyph {
+            display: inline-grid;
+            place-items: center;
+            width: 86px;
+            aspect-ratio: 1;
+            margin-bottom: 22px;
+            border: 1px solid rgba(247, 241, 230, 0.25);
+            border-radius: var(--radius-sm);
+            color: var(--paper);
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: 3.5rem;
+            animation: breathe 1.6s var(--ease) infinite;
+        }
+
+        .loading-hint {
+            margin: 0;
+            color: rgba(247, 241, 230, 0.72);
+            line-height: 1.8;
+            letter-spacing: 0.14em;
+        }
 
         .server-hint {
-            background: rgba(196, 30, 58, 0.2); border: 1px solid var(--vermilion);
-            color: var(--paper-cream); padding: 1.5rem; border-radius: 4px;
-            margin-top: 1rem; max-width: 400px; text-align: center;
+            display: none;
+            margin-top: 18px;
+            padding: 16px;
+            border: 1px solid rgba(167, 53, 42, 0.8);
+            border-radius: var(--radius-md);
+            background: rgba(167, 53, 42, 0.14);
+            color: var(--paper);
+            line-height: 1.8;
         }
-        .server-hint code { background: rgba(0,0,0,0.3); padding: 0.2rem 0.5rem; border-radius: 2px; }
 
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .server-hint code {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            background: rgba(0, 0, 0, 0.24);
+        }
 
-        @media (max-width: 768px) {
-            .poem-card { padding: 2rem 1.5rem; margin: 0 1rem; }
-            .modal-content { max-height: 90vh; }
-            .modal-header, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
-            .action-buttons { flex-direction: column; align-items: center; }
-            .btn { width: 100%; max-width: 200px; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2500;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: rgba(25, 23, 19, 0.66);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 220ms var(--ease), visibility 220ms var(--ease);
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-panel {
+            width: min(900px, 100%);
+            max-height: min(86vh, 860px);
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            background: var(--paper);
+            transform: translateY(18px) scale(0.98);
+            transition: transform 240ms var(--ease);
+        }
+
+        .modal-overlay.show .modal-panel {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: start;
+            padding: 26px 30px 20px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(255, 251, 242, 0.64);
+        }
+
+        .modal-title {
+            margin: 0;
+            font-family: "Ma Shan Zheng", cursive;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            line-height: 1.05;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .modal-title.modal-title-compact {
+            font-size: clamp(1.7rem, 4.2vw, 2.7rem);
+            letter-spacing: 0.04em;
+            line-height: 1.18;
+        }
+
+        .modal-title.modal-title-dense {
+            font-size: clamp(1.55rem, 3.4vw, 2.2rem);
+            letter-spacing: 0.02em;
+            line-height: 1.22;
+        }
+
+        .modal-author {
+            margin: 8px 0 0;
+            color: var(--muted);
+            letter-spacing: 0.14em;
+        }
+
+        .modal-close {
+            width: 44px;
+            min-height: 44px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: rgba(255, 251, 242, 0.82);
+            color: var(--ink);
+            cursor: pointer;
+            font-size: 1.4rem;
+            line-height: 1;
+            transition: background 160ms var(--ease), color 160ms var(--ease), transform 160ms var(--ease);
+        }
+
+        .modal-close:hover,
+        .modal-close:focus-visible {
+            background: var(--lacquer);
+            color: var(--paper);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            display: grid;
+            gap: 20px;
+            max-height: calc(min(86vh, 860px) - 132px);
+            overflow: auto;
+            padding: 24px 30px 30px;
+        }
+
+        .interpret-section {
+            display: grid;
+            gap: 12px;
+        }
+
+        .section-label {
+            width: fit-content;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            background: rgba(73, 104, 90, 0.12);
+            color: var(--pine-dark);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+        }
+
+        .interpret-text {
+            margin: 0;
+            color: var(--ink-soft);
+            font-size: 0.98rem;
+            line-height: 2;
+            text-align: justify;
+        }
+
+        .interpret-text.indent {
+            text-indent: 2em;
+        }
+
+        .highlight-poem {
+            max-height: 260px;
+            overflow: auto;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: rgba(255, 251, 242, 0.74);
+            text-align: center;
+        }
+
+        .highlight-poem .line {
+            display: block;
+            color: var(--ink);
+            font-size: 1.08rem;
+            line-height: 2.1;
+            letter-spacing: 0.1em;
+        }
+
+        .page-footer {
+            margin-top: 30px;
+            color: var(--muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.18em;
+            text-align: center;
+        }
+
+        .fade-change {
+            animation: sheetChange 360ms var(--ease);
+        }
+
+        @keyframes sheetChange {
+            from {
+                opacity: 0.2;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                opacity: 0.36;
+                transform: scale(0.96);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 1ms !important;
+                scroll-behavior: auto !important;
+                transition-duration: 1ms !important;
+            }
+        }
+
+        @media (max-width: 1180px) {
+            .layout {
+                grid-template-columns: minmax(220px, 290px) minmax(0, 1fr);
+            }
+
+            .rail-secondary {
+                grid-column: 1 / -1;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                position: static;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .app-shell {
+                width: min(100% - 24px, 720px);
+                padding-top: 18px;
+            }
+
+            .topbar {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .date-ribbon,
+            .top-actions {
+                justify-self: stretch;
+            }
+
+            .top-actions {
+                justify-content: stretch;
+            }
+
+            .top-actions .btn {
+                flex: 1;
+            }
+
+            .layout,
+            .rail-secondary {
+                grid-template-columns: 1fr;
+            }
+
+            .rail {
+                position: static;
+            }
+
+            .stage {
+                order: 1;
+            }
+
+            .rail-primary {
+                order: 2;
+            }
+
+            .rail-secondary {
+                order: 3;
+            }
+
+            .poem-sheet {
+                min-height: auto;
+            }
+
+            .poem-header {
+                grid-template-columns: 1fr;
+            }
+
+            .poem-author {
+                text-align: left;
+                white-space: normal;
+            }
+
+            .sheet-actions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .sheet-actions .btn-primary {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .app-shell {
+                width: 100%;
+                padding: 12px 12px 28px;
+            }
+
+            .brand-mark {
+                grid-template-columns: 42px 1fr;
+                gap: 10px;
+            }
+
+            .seal {
+                width: 42px;
+                font-size: 1.4rem;
+            }
+
+            .brand-caption,
+            .date-ribbon strong,
+            .date-ribbon span {
+                letter-spacing: 0.12em;
+            }
+
+            .panel {
+                padding: 15px;
+            }
+
+            .poem-sheet {
+                padding: 26px 18px;
+                border-radius: var(--radius-lg);
+            }
+
+            .poem-sheet::before {
+                inset: 10px;
+            }
+
+            .poem-title {
+                letter-spacing: 0.06em;
+            }
+
+            .poem-title.poem-title-compact {
+                font-size: clamp(1.75rem, 7vw, 2.35rem);
+                letter-spacing: 0.02em;
+                line-height: 1.22;
+            }
+
+            .poem-title.poem-title-dense {
+                font-size: clamp(1.45rem, 6.1vw, 2.05rem);
+                letter-spacing: 0.01em;
+            }
+
+            .modal-title.modal-title-compact {
+                font-size: clamp(1.55rem, 7vw, 2.2rem);
+            }
+
+            .modal-title.modal-title-dense {
+                font-size: clamp(1.42rem, 6.2vw, 2rem);
+            }
+
+            .poem-paragraph {
+                letter-spacing: 0.04em;
+                text-align: left;
+            }
+
+            .sheet-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-overlay {
+                padding: 12px;
+            }
+
+            .modal-header,
+            .modal-body {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .segmented {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <span class="loading-text">墨</span>
-        <span class="loading-hint" id="loadingHint">正在加载...</span>
-        <div class="server-hint" id="serverHint" style="display: none;">
-            <p>请使用本地服务器打开此页面</p>
-            <p style="margin-top: 0.5rem; font-size: 0.75rem;">请在项目目录下运行：</p>
-            <code>python3 -m http.server 8080</code>
-            <p style="margin-top: 0.5rem; font-size: 0.75rem;">然后访问 http://localhost:8080</p>
+    <div class="loading-screen" id="loadingScreen" aria-live="polite">
+        <div class="loading-card">
+            <div class="loading-glyph" aria-hidden="true">墨</div>
+            <p class="loading-hint" id="loadingHint">正在加载...</p>
+            <div class="server-hint" id="serverHint">
+                <div>请使用本地服务器打开此页面</div>
+                <code>python3 -m http.server 8080</code>
+            </div>
         </div>
     </div>
 
-    <div class="page-wrapper">
-        <div class="ink-texture"></div>
-        <div class="mountain-bg"></div>
-        <div class="mountain-silhouette">
-            <svg viewBox="0 0 1440 400" preserveAspectRatio="none">
-                <path fill="rgba(26, 26, 26, 0.8)" d="M0,400 L0,280 Q120,200 240,260 T480,220 T720,180 T960,200 T1200,160 T1440,200 L1440,400 Z"/>
-                <path fill="rgba(26, 26, 26, 0.6)" d="M0,400 L0,320 Q180,280 360,300 T720,260 T1080,220 T1440,280 L1440,400 Z"/>
-                <path fill="rgba(26, 26, 26, 0.4)" d="M0,400 L0,350 Q240,320 480,340 T960,300 T1440,330 L1440,400 Z"/>
-            </svg>
+    <main class="app-shell">
+        <header class="topbar">
+            <div class="brand-mark" aria-label="每日诗词">
+                <span class="seal">诗</span>
+                <div>
+                    <h1 class="brand-name">每日诗词</h1>
+                    <p class="brand-caption">Poem Daily Reading Desk</p>
+                </div>
+            </div>
+
+            <div class="date-ribbon">
+                <strong id="solarDate">一月一日</strong>
+                <span id="lunarDate">农历 正月初一 · 小寒</span>
+            </div>
+
+            <div class="top-actions">
+                <button class="btn" type="button" onclick="shufflePoem()">随机赏读</button>
+                <button class="btn btn-pine" type="button" onclick="openInterpret()">打开解读</button>
+            </div>
+        </header>
+
+        <div class="layout">
+            <aside class="rail rail-primary" aria-label="检索与筛选">
+                <section class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">诗库检索</h2>
+                        <span class="panel-kicker" id="resultCount">输入标题或作者</span>
+                    </div>
+                    <div class="segmented" role="group" aria-label="诗词分类筛选">
+                        <button class="filter-btn active" type="button" data-filter="all" onclick="setFilter('all')">全部</button>
+                        <button class="filter-btn" type="button" data-filter="唐诗" onclick="setFilter('唐诗')">唐诗</button>
+                        <button class="filter-btn" type="button" data-filter="宋词" onclick="setFilter('宋词')">宋词</button>
+                        <button class="filter-btn" type="button" data-filter="元曲" onclick="setFilter('元曲')">元曲</button>
+                    </div>
+                    <div class="search-wrap" style="margin-top: 12px;">
+                        <input type="search" class="search-input" id="searchInput" placeholder="搜索诗词、作者..." autocomplete="off" oninput="searchPoems()">
+                    </div>
+                    <div class="search-results" id="searchResults"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">诗词规模</h2>
+                        <span class="panel-kicker">本地数据</span>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-tile">
+                            <span class="stat-value" id="tangCount">0</span>
+                            <span class="stat-label">唐诗</span>
+                        </div>
+                        <div class="stat-tile">
+                            <span class="stat-value" id="songCount">0</span>
+                            <span class="stat-label">宋词</span>
+                        </div>
+                        <div class="stat-tile">
+                            <span class="stat-value" id="yuanCount">0</span>
+                            <span class="stat-label">元曲</span>
+                        </div>
+                        <div class="stat-tile">
+                            <span class="stat-value" id="appCount">0</span>
+                            <span class="stat-label">赏析</span>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="stage" aria-label="每日诗词正文">
+                <article class="poem-sheet" id="poemCard">
+                    <span class="poem-type-badge" id="poemType">唐诗</span>
+                    <header class="poem-header">
+                        <div>
+                            <h2 class="poem-title" id="poemTitle">静夜思</h2>
+                        </div>
+                        <p class="poem-author"><span id="poemAuthor">李白</span> · <span id="poemDynasty">唐</span></p>
+                    </header>
+                    <div class="poem-content" id="poemContent"></div>
+                    <p class="poem-brief" id="poemBrief">加载中...</p>
+                    <div class="sheet-actions">
+                        <button class="btn" type="button" onclick="prevPoem()">上一首</button>
+                        <button class="btn" type="button" onclick="nextPoem()">下一首</button>
+                        <button class="btn btn-primary" type="button" onclick="openInterpret()">诗词解读</button>
+                        <button class="btn" type="button" id="favoriteButton" onclick="toggleFavorite()">收藏</button>
+                        <button class="btn" type="button" onclick="sharePoem()">分享</button>
+                    </div>
+                </article>
+            </section>
+
+            <aside class="rail rail-secondary" aria-label="阅读信息">
+                <section class="panel season-card">
+                    <div>
+                        <p class="season-name" id="seasonName">春</p>
+                        <p class="season-desc" id="seasonDesc">万物复苏</p>
+                    </div>
+                    <div class="season-foot" id="seasonFoot">今日推荐依据日期轮换，全年不重复。</div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">当前卷页</h2>
+                        <span class="panel-kicker" id="currentPosition">第 1 首</span>
+                    </div>
+                    <dl class="reading-meta">
+                        <div class="meta-row">
+                            <dt class="meta-label">标题</dt>
+                            <dd class="meta-value" id="metaTitle">静夜思</dd>
+                        </div>
+                        <div class="meta-row">
+                            <dt class="meta-label">作者</dt>
+                            <dd class="meta-value" id="metaAuthor">李白</dd>
+                        </div>
+                        <div class="meta-row">
+                            <dt class="meta-label">体裁</dt>
+                            <dd class="meta-value" id="metaType">唐诗</dd>
+                        </div>
+                        <div class="meta-row">
+                            <dt class="meta-label">篇幅</dt>
+                            <dd class="meta-value" id="metaLength">0 行</dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">我的收藏</h2>
+                        <span class="panel-kicker" id="favoriteCount">0 首</span>
+                    </div>
+                    <div class="favorites-list" id="favoritesList">
+                        <p class="empty-state">暂无收藏</p>
+                    </div>
+                </section>
+            </aside>
         </div>
 
-        <div class="main-container">
-            <header class="header">
-                <h1>每日诗词</h1>
-                <p class="subtitle">Tang & Song Poetry</p>
+        <p class="page-footer">诗词之美 · 传承千年</p>
+    </main>
+
+    <div class="modal-overlay" id="interpretModal" onclick="closeModal(event)" aria-hidden="true">
+        <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="event.stopPropagation()">
+            <header class="modal-header">
+                <div>
+                    <h3 class="modal-title" id="modalTitle">静夜思</h3>
+                    <p class="modal-author"><span id="modalAuthor">李白</span> · <span id="modalDynasty">唐</span></p>
+                </div>
+                <button class="modal-close" type="button" aria-label="关闭解读" onclick="closeInterpret()">×</button>
             </header>
-
-            <div class="date-section">
-                <div class="season-badge" id="seasonBadge">春 · 万物复苏</div>
-                <div class="date-display">
-                    <div class="solar-date" id="solarDate"></div>
-                    <div class="lunar-date" id="lunarDate"></div>
-                </div>
-            </div>
-
-            <article class="poem-card" id="poemCard">
-                <div class="poem-type-badge" id="poemType">唐诗</div>
-                <header class="poem-header">
-                    <h2 class="poem-title" id="poemTitle">静夜思</h2>
-                    <p class="poem-author"><span id="poemAuthor">李白</span> · <span id="poemDynasty">唐</span></p>
-                </header>
-                <div class="poem-content" id="poemContent"></div>
-                <p class="poem-brief" id="poemBrief">加载中...</p>
-                <div class="action-buttons">
-                    <button class="btn" onclick="prevPoem()">← 上一首</button>
-                    <button class="btn" onclick="shufflePoem()">随机</button>
-                    <button class="btn btn-interpret" onclick="openInterpret()">诗词解读</button>
-                    <button class="btn" onclick="nextPoem()">下一首 →</button>
-                </div>
-                <div class="action-buttons" style="margin-top: 0.8rem;">
-                    <button class="btn btn-secondary" onclick="toggleFavorite()">收藏</button>
-                    <button class="btn btn-secondary" onclick="sharePoem()">分享</button>
-                </div>
-            </article>
-
-            <section class="search-section">
-                <div class="category-filter">
-                    <button class="filter-btn active" onclick="setFilter('all')">全部</button>
-                    <button class="filter-btn" onclick="setFilter('唐诗')">唐诗</button>
-                    <button class="filter-btn" onclick="setFilter('宋词')">宋词</button>
-                    <button class="filter-btn" onclick="setFilter('元曲')">元曲</button>
-                </div>
-                <div class="search-box">
-                    <input type="text" class="search-input" id="searchInput" placeholder="搜索诗词、作者..." oninput="searchPoems()">
-                </div>
-                <div class="search-results" id="searchResults"></div>
-                <p class="poem-stats" id="poemStats"></p>
-            </section>
-
-            <section class="favorites-section">
-                <h3 class="section-title">我的收藏</h3>
-                <div class="favorites-list" id="favoritesList"><span class="empty-favorites">暂无收藏</span></div>
-            </section>
-
-            <footer class="footer"><p>诗词之美 · 传承千年</p></footer>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="interpretModal" onclick="closeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <button class="modal-close" onclick="closeInterpret()">×</button>
-                <h3 class="modal-title" id="modalTitle">静夜思</h3>
-                <p class="modal-author"><span id="modalAuthor">李白</span> · <span id="modalDynasty">唐</span></p>
-            </div>
             <div class="modal-body">
-                <div class="interpret-section">
+                <section class="interpret-section">
                     <span class="section-label">诗词全文</span>
-                    <div class="highlight-poem poem-scroll" id="modalPoemContent"></div>
-                </div>
-                <div class="interpret-section" id="notesSection">
+                    <div class="highlight-poem" id="modalPoemContent"></div>
+                </section>
+                <section class="interpret-section" id="notesSection">
                     <span class="section-label">注释</span>
                     <p class="interpret-text indent" id="modalNotes"></p>
-                </div>
-                <div class="interpret-section" id="translationSection">
+                </section>
+                <section class="interpret-section" id="translationSection">
                     <span class="section-label">译文</span>
                     <p class="interpret-text indent" id="modalTranslation"></p>
-                </div>
-                <div class="interpret-section">
+                </section>
+                <section class="interpret-section">
                     <span class="section-label">赏析</span>
                     <p class="interpret-text indent" id="modalAppreciation"></p>
-                </div>
-                <div class="interpret-section" id="sourceSection" style="display:none;">
+                </section>
+                <section class="interpret-section" id="sourceSection" style="display:none;">
                     <span class="section-label">来源</span>
                     <p class="interpret-text" id="modalSource"></p>
-                </div>
+                </section>
             </div>
-        </div>
+        </section>
     </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
         const POEMS_DATA_URL = 'data/poems.json';
@@ -398,18 +1298,18 @@
         let currentIndex = 0;
         let currentPoem = null;
         let currentFilter = 'all';
-        let favorites = JSON.parse(localStorage.getItem('poemFavorites')) || [];
-        let loadingCount = 0;
+        let favorites = readFavorites();
+        let toastTimer = null;
 
         const seasons = {
-            spring: { name: "春", desc: "万物复苏", months: [2, 3, 4] },
-            summer: { name: "夏", desc: "骄阳似火", months: [5, 6, 7] },
-            autumn: { name: "秋", desc: "金风送爽", months: [8, 9, 10] },
-            winter: { name: "冬", desc: "寒梅傲雪", months: [11, 12, 1] }
+            spring: { name: '春', desc: '万物复苏', months: [2, 3, 4] },
+            summer: { name: '夏', desc: '骄阳似火', months: [5, 6, 7] },
+            autumn: { name: '秋', desc: '金风送爽', months: [8, 9, 10] },
+            winter: { name: '冬', desc: '寒梅傲雪', months: [11, 12, 1] }
         };
 
         const lunarMonths = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月'];
-        const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
+        const lunarDays = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十', '卅一'];
         const solarTerms = ['小寒', '大寒', '立春', '雨水', '惊蛰', '春分', '清明', '谷雨', '立夏', '小满', '芒种', '夏至', '小暑', '大暑', '立秋', '处暑', '白露', '秋分', '寒露', '霜降', '立冬', '小雪', '大雪', '冬至'];
 
         async function loadData() {
@@ -424,30 +1324,46 @@
                 if (!poemsRes.ok) throw new Error('诗词数据加载失败');
 
                 const poemsData = await poemsRes.json();
-                tangPoems = poemsData.filter(p => p.dynasty === '唐');
-                songCiPoems = poemsData.filter(p => p.dynasty === '宋');
-                yuanQuPoems = poemsData.filter(p => p.dynasty === '元');
+                tangPoems = poemsData.filter(poem => poem.dynasty === '唐');
+                songCiPoems = poemsData.filter(poem => poem.dynasty === '宋');
+                yuanQuPoems = poemsData.filter(poem => poem.dynasty === '元');
                 allPoems = [...tangPoems, ...songCiPoems, ...yuanQuPoems];
 
                 if (appreciationsRes.ok) {
-                    const appData = await appreciationsRes.json();
-                    appreciations = appData;
-                    updateLoadingHint(`已加载 ${allPoems.length} 首诗词，${Object.keys(appreciations).length} 条赏析`);
+                    appreciations = await appreciationsRes.json();
+                    updateLoadingHint(`已加载 ${formatNumber(allPoems.length)} 首诗词与 ${formatNumber(Object.keys(appreciations).length)} 条赏析`);
                 } else {
-                    updateLoadingHint(`已加载 ${allPoems.length} 首诗词`);
+                    updateLoadingHint(`已加载 ${formatNumber(allPoems.length)} 首诗词`);
                 }
 
                 init();
-
             } catch (error) {
                 console.error('加载失败:', error);
-                updateLoadingHint('加载失败');
+                updateLoadingHint('加载失败，请确认本地服务器已启动。');
                 document.getElementById('serverHint').style.display = 'block';
             }
         }
 
+        function readFavorites() {
+            try {
+                const raw = localStorage.getItem('poemFavorites');
+                return raw ? JSON.parse(raw) : [];
+            } catch (error) {
+                console.warn('收藏读取失败，已重置。', error);
+                return [];
+            }
+        }
+
+        function saveFavorites() {
+            localStorage.setItem('poemFavorites', JSON.stringify(favorites));
+        }
+
         function updateLoadingHint(text) {
             document.getElementById('loadingHint').textContent = text;
+        }
+
+        function formatNumber(value) {
+            return new Intl.NumberFormat('zh-CN').format(value || 0);
         }
 
         function getSolarTerm() {
@@ -460,16 +1376,13 @@
 
         function getSeason() {
             const month = new Date().getMonth() + 1;
-            for (const [key, s] of Object.entries(seasons)) {
-                if (s.months.includes(month)) return s;
-            }
-            return seasons.spring;
+            return Object.values(seasons).find(season => season.months.includes(month)) || seasons.spring;
         }
 
         function getLunarDate() {
             const now = new Date();
             const month = lunarMonths[now.getMonth()];
-            const day = lunarDays[now.getDate() - 1];
+            const day = lunarDays[now.getDate() - 1] || lunarDays[lunarDays.length - 1];
             return `${month}${day}`;
         }
 
@@ -481,19 +1394,10 @@
 
         function getDailyPoemIndex() {
             const now = new Date();
-            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-            return dayOfYear;
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
+            return Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
         }
 
         function getFilteredPoems() {
-            if (currentFilter === 'all') return allPoems;
             if (currentFilter === '唐诗') return tangPoems;
             if (currentFilter === '宋词') return songCiPoems;
             if (currentFilter === '元曲') return yuanQuPoems;
@@ -504,148 +1408,146 @@
             return appreciations[title] || null;
         }
 
+        function setText(id, text) {
+            document.getElementById(id).textContent = text;
+        }
+
+        function createTextElement(tag, className, text) {
+            const element = document.createElement(tag);
+            element.className = className;
+            element.textContent = text;
+            return element;
+        }
+
         function renderPoem(poem) {
-            document.getElementById('poemType').textContent = poem.type;
-            document.getElementById('poemTitle').textContent = poem.title;
-            document.getElementById('poemAuthor').textContent = poem.author;
-            document.getElementById('poemDynasty').textContent = poem.dynasty;
+            if (!poem) return;
 
-            const app = getAppreciation(poem.title);
+            setText('poemType', poem.type || '诗词');
+            setText('poemTitle', poem.title || '无题');
+            setText('poemAuthor', poem.author || '佚名');
+            setText('poemDynasty', poem.dynasty || '');
+            const poemTitle = document.getElementById('poemTitle');
+            const titleLength = (poem.title || '').length;
+            poemTitle.classList.toggle('poem-title-compact', titleLength > 12);
+            poemTitle.classList.toggle('poem-title-dense', titleLength > 20);
+            setText('metaTitle', poem.title || '无题');
+            setText('metaAuthor', poem.author || '佚名');
+            setText('metaType', `${poem.dynasty || ''} · ${poem.type || '诗词'}`.replace(/^ · /, ''));
+            setText('metaLength', `${(poem.content || []).length} 行`);
 
-            if (app && app.appreciation) {
-                document.getElementById('poemBrief').textContent = app.appreciation.substring(0, 80) + (app.appreciation.length > 80 ? '...' : '');
-            } else {
-                document.getElementById('poemBrief').textContent = `《${poem.title}》是${poem.dynasty}朝${poem.author}的${poem.type}。`;
-            }
+            const filtered = getFilteredPoems();
+            setText('currentPosition', `第 ${formatNumber(currentIndex + 1)} / ${formatNumber(filtered.length)} 首`);
 
             const contentEl = document.getElementById('poemContent');
             contentEl.innerHTML = '';
 
             if (!poem.content || poem.content.length === 0) {
-                contentEl.innerHTML = '<p class="poem-paragraph"><span class="poem-line">暂无内容</span></p>';
-                return;
-            }
-
-            poem.content.forEach((line, index) => {
-                if (index > 0) {
-                    const separator = document.createElement('span');
-                    separator.className = 'poem-separator';
-                    contentEl.appendChild(separator);
-                }
-
-                const paragraph = document.createElement('p');
-                paragraph.className = 'poem-paragraph';
-
-                const sentences = line.split(/[，。；！？、：]/);
-                sentences.forEach((s, i) => {
-                    if (s.trim()) {
-                        const span = document.createElement('span');
-                        span.className = 'poem-line';
-                        const punctuation = i < sentences.length - 1 ? '，' : '。';
-                        span.textContent = s.trim() + (s.trim() ? punctuation : '');
-                        paragraph.appendChild(span);
-                    }
-                });
-
-                contentEl.appendChild(paragraph);
-            });
-        }
-
-        function renderModal(poem) {
-            document.getElementById('modalTitle').textContent = poem.title;
-            document.getElementById('modalAuthor').textContent = poem.author;
-            document.getElementById('modalDynasty').textContent = poem.dynasty;
-
-            const contentEl = document.getElementById('modalPoemContent');
-            if (!poem.content || poem.content.length === 0) {
-                contentEl.innerHTML = '<span class="line">暂无内容</span>';
+                contentEl.appendChild(createTextElement('p', 'poem-paragraph', '暂无内容'));
             } else {
-                contentEl.innerHTML = poem.content.map(line => `<span class="line">${line}</span>`).join('');
+                poem.content.forEach(line => {
+                    const paragraph = createTextElement('p', 'poem-paragraph', line);
+                    contentEl.appendChild(paragraph);
+                });
             }
 
             const app = getAppreciation(poem.title);
-
-            // Notes section
-            const notesSection = document.getElementById('notesSection');
-            if (app && app.notes) {
-                notesSection.style.display = 'block';
-                document.getElementById('modalNotes').textContent = app.notes;
-            } else {
-                notesSection.style.display = 'none';
-            }
-
-            // Translation section
-            const translationSection = document.getElementById('translationSection');
-            if (app && app.translation) {
-                translationSection.style.display = 'block';
-                document.getElementById('modalTranslation').textContent = app.translation;
-            } else {
-                translationSection.style.display = 'none';
-            }
-
-            // Appreciation
             if (app && app.appreciation) {
-                document.getElementById('modalAppreciation').textContent = app.appreciation;
+                const brief = app.appreciation.length > 96 ? `${app.appreciation.slice(0, 96)}...` : app.appreciation;
+                setText('poemBrief', brief);
             } else {
-                document.getElementById('modalAppreciation').textContent = '暂无赏析';
+                setText('poemBrief', `《${poem.title || '无题'}》是${poem.dynasty || ''}朝${poem.author || '佚名'}的${poem.type || '诗词'}。`);
             }
 
-            // Source
-            const sourceSection = document.getElementById('sourceSection');
-            if (app && app.source) {
-                sourceSection.style.display = 'block';
-                document.getElementById('modalSource').textContent = app.source;
+            updateFavoriteButton();
+        }
+
+        function renderModal(poem) {
+            if (!poem) return;
+
+            setText('modalTitle', poem.title || '无题');
+            setText('modalAuthor', poem.author || '佚名');
+            setText('modalDynasty', poem.dynasty || '');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalTitleLength = (poem.title || '').length;
+            modalTitle.classList.toggle('modal-title-compact', modalTitleLength > 12);
+            modalTitle.classList.toggle('modal-title-dense', modalTitleLength > 20);
+
+            const contentEl = document.getElementById('modalPoemContent');
+            contentEl.innerHTML = '';
+            if (!poem.content || poem.content.length === 0) {
+                contentEl.appendChild(createTextElement('span', 'line', '暂无内容'));
             } else {
-                sourceSection.style.display = 'none';
+                poem.content.forEach(line => {
+                    contentEl.appendChild(createTextElement('span', 'line', line));
+                });
             }
+
+            const app = getAppreciation(poem.title);
+            toggleSection('notesSection', app && app.notes, 'modalNotes', app ? app.notes : '');
+            toggleSection('translationSection', app && app.translation, 'modalTranslation', app ? app.translation : '');
+            setText('modalAppreciation', app && app.appreciation ? app.appreciation : '暂无赏析');
+            toggleSection('sourceSection', app && app.author, 'modalSource', app ? app.author : '');
+        }
+
+        function toggleSection(sectionId, shouldShow, textId, value) {
+            const section = document.getElementById(sectionId);
+            section.style.display = shouldShow ? 'grid' : 'none';
+            if (textId) setText(textId, value || '');
+        }
+
+        function moveToPoem(index) {
+            const filtered = getFilteredPoems();
+            if (filtered.length === 0) return;
+
+            currentIndex = (index + filtered.length) % filtered.length;
+            currentPoem = filtered[currentIndex];
+            animateChange();
         }
 
         function prevPoem() {
-            const filtered = getFilteredPoems();
-            if (filtered.length === 0) return;
-            currentIndex = (currentIndex - 1 + filtered.length) % filtered.length;
-            currentPoem = filtered[currentIndex];
-            animateChange();
+            moveToPoem(currentIndex - 1);
         }
 
         function nextPoem() {
-            const filtered = getFilteredPoems();
-            if (filtered.length === 0) return;
-            currentIndex = (currentIndex + 1) % filtered.length;
-            currentPoem = filtered[currentIndex];
-            animateChange();
+            moveToPoem(currentIndex + 1);
         }
 
         function shufflePoem() {
             const filtered = getFilteredPoems();
             if (filtered.length === 0) return;
-            let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * filtered.length);
-            } while (newIndex === currentIndex && filtered.length > 1);
-            currentIndex = newIndex;
-            currentPoem = filtered[currentIndex];
-            animateChange();
+
+            let newIndex = Math.floor(Math.random() * filtered.length);
+            if (filtered.length > 1) {
+                while (newIndex === currentIndex) {
+                    newIndex = Math.floor(Math.random() * filtered.length);
+                }
+            }
+            moveToPoem(newIndex);
         }
 
         function animateChange() {
             const card = document.getElementById('poemCard');
-            card.style.animation = 'none';
-            card.offsetHeight;
-            card.style.animation = 'fadeInUp 0.6s ease-out';
+            card.classList.remove('fade-change');
+            void card.offsetWidth;
+            card.classList.add('fade-change');
             renderPoem(currentPoem);
             document.getElementById('searchResults').innerHTML = '';
+            setText('resultCount', '输入标题或作者');
         }
 
         function openInterpret() {
             if (!currentPoem) return;
             renderModal(currentPoem);
-            document.getElementById('interpretModal').classList.add('show');
+            const modal = document.getElementById('interpretModal');
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
         }
 
         function closeInterpret() {
-            document.getElementById('interpretModal').classList.remove('show');
+            const modal = document.getElementById('interpretModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
         }
 
@@ -655,27 +1557,34 @@
 
         function setFilter(filter) {
             currentFilter = filter;
-            currentIndex = 0;
-
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === filter || (filter === 'all' && btn.textContent === '全部'));
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.classList.toggle('active', button.dataset.filter === filter);
             });
 
             const filtered = getFilteredPoems();
-            if (filtered.length > 0) {
-                currentPoem = filtered[0];
-                renderPoem(currentPoem);
-            }
-
+            currentIndex = 0;
+            currentPoem = filtered[0] || null;
+            renderPoem(currentPoem);
             document.getElementById('searchInput').value = '';
             document.getElementById('searchResults').innerHTML = '';
+            setText('resultCount', `当前 ${formatNumber(filtered.length)} 首`);
+        }
+
+        function isCurrentFavorite() {
+            if (!currentPoem) return false;
+            return favorites.some(fav => fav.title === currentPoem.title && fav.author === currentPoem.author);
+        }
+
+        function updateFavoriteButton() {
+            const button = document.getElementById('favoriteButton');
+            button.textContent = isCurrentFavorite() ? '已收藏' : '收藏';
+            button.classList.toggle('btn-pine', isCurrentFavorite());
         }
 
         function toggleFavorite() {
             if (!currentPoem) return;
 
-            const index = favorites.findIndex(p => p.title === currentPoem.title && p.author === currentPoem.author);
-
+            const index = favorites.findIndex(fav => fav.title === currentPoem.title && fav.author === currentPoem.author);
             if (index > -1) {
                 favorites.splice(index, 1);
                 showToast('已取消收藏');
@@ -689,117 +1598,161 @@
                 showToast('已添加到收藏');
             }
 
-            localStorage.setItem('poemFavorites', JSON.stringify(favorites));
+            saveFavorites();
             renderFavorites();
+            updateFavoriteButton();
         }
 
-        function loadFavorite(fav) {
-            const poem = allPoems.find(p => p.title === fav.title && p.author === fav.author);
-            if (poem) {
-                currentPoem = poem;
-                const filtered = getFilteredPoems();
-                currentIndex = filtered.findIndex(p => p.title === fav.title && p.author === fav.author);
-                if (currentIndex === -1) currentIndex = 0;
-                renderPoem(poem);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                document.getElementById('searchResults').innerHTML = '';
-            }
+        function loadFavorite(title, author) {
+            const poem = allPoems.find(item => item.title === title && item.author === author);
+            if (!poem) return;
+
+            currentPoem = poem;
+            const filtered = getFilteredPoems();
+            const nextIndex = filtered.findIndex(item => item.title === title && item.author === author);
+            currentIndex = nextIndex > -1 ? nextIndex : 0;
+            renderPoem(poem);
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('searchInput').value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderFavorites() {
             const list = document.getElementById('favoritesList');
+            setText('favoriteCount', `${formatNumber(favorites.length)} 首`);
+            list.innerHTML = '';
+
             if (favorites.length === 0) {
-                list.innerHTML = '<span class="empty-favorites">暂无收藏</span>';
+                list.appendChild(createTextElement('p', 'empty-state', '暂无收藏'));
                 return;
             }
 
-            list.innerHTML = favorites.map(fav => `
-                <span class="favorite-tag" onclick="loadFavorite({title: '${fav.title.replace(/'/g, "\\'")}', author: '${fav.author.replace(/'/g, "\\'")}', dynasty: '${fav.dynasty}', type: '${fav.type}'})">
-                    ${fav.title} · ${fav.author}
-                </span>
-            `).join('');
+            favorites.slice(-8).reverse().forEach(fav => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'favorite-tag';
+                button.addEventListener('click', () => loadFavorite(fav.title, fav.author));
+
+                const title = createTextElement('span', 'favorite-title', fav.title);
+                const meta = createTextElement('span', 'favorite-meta', `${fav.author} · ${fav.dynasty || ''}${fav.type ? ` · ${fav.type}` : ''}`);
+                button.append(title, meta);
+                list.appendChild(button);
+            });
         }
 
         function searchPoems() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const resultsEl = document.getElementById('searchResults');
+            resultsEl.innerHTML = '';
 
             if (!query) {
-                resultsEl.innerHTML = '';
+                setText('resultCount', '输入标题或作者');
                 return;
             }
 
             const filtered = getFilteredPoems();
-            const results = filtered.filter(p =>
-                (p.title && p.title.toLowerCase().includes(query)) ||
-                (p.author && p.author.toLowerCase().includes(query))
+            const results = filtered.filter(poem =>
+                (poem.title && poem.title.toLowerCase().includes(query)) ||
+                (poem.author && poem.author.toLowerCase().includes(query))
             ).slice(0, 50);
 
+            setText('resultCount', `${formatNumber(results.length)} 条结果`);
+
             if (results.length === 0) {
-                resultsEl.innerHTML = '<p style="color: var(--ink-gray); text-align: center; padding: 1rem;">未找到相关诗词</p>';
+                resultsEl.appendChild(createTextElement('p', 'empty-state', '未找到相关诗词'));
                 return;
             }
 
-            resultsEl.innerHTML = results.map(p => `
-                <div class="search-result-item" onclick="selectPoem('${p.title.replace(/'/g, "\\'")}', '${p.author.replace(/'/g, "\\'")}')">
-                    <div>
-                        <span class="title">${p.title}</span>
-                        <span class="author" style="margin-left: 0.5rem;">${p.author}</span>
-                    </div>
-                    <span class="author">${p.dynasty} · ${p.type}</span>
-                </div>
-            `).join('');
+            results.forEach(poem => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'search-result-item';
+                button.addEventListener('click', () => selectPoem(poem.title, poem.author));
+
+                const textWrap = document.createElement('span');
+                const title = createTextElement('span', 'result-title', poem.title || '无题');
+                const meta = createTextElement('span', 'result-meta', poem.author || '佚名');
+                textWrap.append(title, meta);
+
+                const type = createTextElement('span', 'result-type', `${poem.dynasty || ''} · ${poem.type || ''}`.replace(/^ · /, ''));
+                button.append(textWrap, type);
+                resultsEl.appendChild(button);
+            });
         }
 
         function selectPoem(title, author) {
-            const poem = allPoems.find(p => p.title === title && p.author === author);
-            if (poem) {
-                currentPoem = poem;
-                const filtered = getFilteredPoems();
-                currentIndex = filtered.findIndex(p => p.title === title && p.author === author);
-                if (currentIndex === -1) currentIndex = 0;
-                renderPoem(poem);
-                document.getElementById('searchResults').innerHTML = '';
-                document.getElementById('searchInput').value = '';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            const poem = allPoems.find(item => item.title === title && item.author === author);
+            if (!poem) return;
+
+            currentPoem = poem;
+            const filtered = getFilteredPoems();
+            const nextIndex = filtered.findIndex(item => item.title === title && item.author === author);
+            currentIndex = nextIndex > -1 ? nextIndex : 0;
+            renderPoem(poem);
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('searchInput').value = '';
+            setText('resultCount', '输入标题或作者');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function sharePoem() {
             if (!currentPoem) return;
+
             const text = `${currentPoem.title} · ${currentPoem.author}\n\n${(currentPoem.content || []).join('\n')}\n\n—— 来自「每日诗词」`;
             if (navigator.share) {
-                navigator.share({ text });
-            } else {
+                navigator.share({ text }).catch(() => {});
+            } else if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).then(() => showToast('诗词已复制到剪贴板'));
+            } else {
+                showToast('当前浏览器不支持自动分享');
             }
         }
 
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
         function updateStats() {
-            const appCount = Object.keys(appreciations).length;
-            document.getElementById('poemStats').textContent = `诗词库：唐诗 ${tangPoems.length} 首 | 宋词 ${songCiPoems.length} 首 | 元曲 ${yuanQuPoems.length} 首 | 赏析 ${appCount} 条`;
+            setText('tangCount', formatNumber(tangPoems.length));
+            setText('songCount', formatNumber(songCiPoems.length));
+            setText('yuanCount', formatNumber(yuanQuPoems.length));
+            setText('appCount', formatNumber(Object.keys(appreciations).length));
+        }
+
+        function initDate() {
+            setText('solarDate', formatSolarDate());
+            setText('lunarDate', `农历 ${getLunarDate()} · ${getSolarTerm()}`);
+
+            const season = getSeason();
+            setText('seasonName', season.name);
+            setText('seasonDesc', season.desc);
+            setText('seasonFoot', `今日推荐依据 ${formatSolarDate()} 轮换，打开即读。`);
         }
 
         function init() {
-            const now = new Date();
-            document.getElementById('solarDate').textContent = formatSolarDate();
-            document.getElementById('lunarDate').textContent = `农历 ${getLunarDate()} · ${getSolarTerm()}`;
-
-            const season = getSeason();
-            document.getElementById('seasonBadge').textContent = `${season.name} · ${season.desc}`;
-
-            const dailyIndex = getDailyPoemIndex();
-            currentIndex = dailyIndex % allPoems.length;
-            currentPoem = allPoems[currentIndex];
-
-            renderPoem(currentPoem);
-            renderFavorites();
+            initDate();
             updateStats();
+            renderFavorites();
+
+            currentIndex = getDailyPoemIndex() % allPoems.length;
+            currentPoem = allPoems[currentIndex];
+            renderPoem(currentPoem);
+            setText('resultCount', `总计 ${formatNumber(allPoems.length)} 首`);
 
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('hidden');
-            }, 500);
+            }, 380);
         }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeInterpret();
+            if (event.key === 'ArrowLeft' && !document.getElementById('interpretModal').classList.contains('show')) prevPoem();
+            if (event.key === 'ArrowRight' && !document.getElementById('interpretModal').classList.contains('show')) nextPoem();
+        });
 
         loadData();
     </script>
